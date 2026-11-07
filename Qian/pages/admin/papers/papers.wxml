@@ -1,0 +1,20 @@
+<view class="container">
+  <view class="row" style="margin-bottom: 24rpx;">
+    <view class="page-title">试卷</view>
+    <button class="btn btn-small" bindtap="onCreate">+ 新建试卷</button>
+  </view>
+  <view wx:for="{{papers}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="onOpen">
+    <view class="row">
+      <view class="title grow">{{item.title}}</view>
+      <view class="tag {{item.status === 'PUBLISHED' ? 'tag-green' : ''}}">{{item.status === 'PUBLISHED' ? '已发布' : '未发布'}}</view>
+    </view>
+    <view class="muted mt">{{item.questionCount}} 题，满分 {{item.maxScore}} 分</view>
+  </view>
+  <view class="empty" wx:if="{{loaded && papers.length === 0}}">还没有试卷，点右上角新建</view>
+
+  <view class="tabbar">
+    <view class="tabbar-item" data-url="/pages/admin/home/home" bindtap="onTab">工作台</view>
+    <view class="tabbar-item tabbar-active">试卷</view>
+    <view class="tabbar-item" data-url="/pages/admin/students/students" bindtap="onTab">学生</view>
+  </view>
+</view>

@@ -1,0 +1,17 @@
+# 后端构建产物和本地数据（数据库、上传的图片），不上传
+Hou/target/
+Hou/data/
+*.log
+
+# IDE 配置
+.idea/
+*.iml
+.vscode/
+
+# 微信开发者工具的个人配置
+Qian/project.private.config.json
+node_modules/
+miniprogram_npm/
+
+.DS_Store
+Thumbs.db

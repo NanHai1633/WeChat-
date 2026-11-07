@@ -1,0 +1,69 @@
+<view class="container">
+  <view class="tabs">
+    <view wx:for="{{types}}" wx:key="value" class="tab {{type === item.value ? 'tab-active' : ''}}"
+          data-type="{{item.value}}" bindtap="onType">{{item.label}}</view>
+  </view>
+
+  <view class="card">
+    <view class="label" style="margin-top: 0;">题干</view>
+    <textarea class="textarea" value="{{content}}" maxlength="10000" auto-height placeholder="请输入题目内容"
+              data-field="content" bindinput="onField"></textarea>
+
+    <view class="label">题干图片（选填）</view>
+    <view class="gallery">
+      <view wx:for="{{imageUrls}}" wx:key="*this" class="thumb-wrap">
+        <image class="thumb" src="{{item}}" mode="aspectFill"
+               data-urls="{{imageUrls}}" data-current="{{item}}" bindtap="onPreview"></image>
+        <view class="thumb-remove" data-i="{{index}}" bindtap="onRemoveImage">×</view>
+      </view>
+      <view class="upload-tile" wx:if="{{imageUrls.length < maxImages}}" bindtap="onAddImage">
+        <text class="upload-plus">+</text>添加图片
+      </view>
+    </view>
+
+    <block wx:if="{{type === 'SINGLE_CHOICE'}}">
+      <view wx:for="{{optionKeys}}" wx:key="key">
+        <view class="label">选项 {{item.key}}</view>
+        <input class="input" value="{{item.value}}" maxlength="1000" data-field="{{item.field}}" bindinput="onOption" />
+      </view>
+      <view class="label">正确答案</view>
+      <view class="choices">
+        <view wx:for="{{optionKeys}}" wx:key="key" class="choice {{answer === item.key ? 'choice-active' : ''}}"
+              data-value="{{item.key}}" bindtap="onAnswer">{{item.key}}</view>
+      </view>
+    </block>
+
+    <block wx:if="{{type === 'TRUE_FALSE'}}">
+      <view class="label">正确答案</view>
+      <view class="choices">
+        <view class="choice {{answer === 'TRUE' ? 'choice-active' : ''}}" data-value="TRUE" bindtap="onAnswer">正确</view>
+        <view class="choice {{answer === 'FALSE' ? 'choice-active' : ''}}" data-value="FALSE" bindtap="onAnswer">错误</view>
+      </view>
+    </block>
+
+    <block wx:if="{{type === 'FILL_BLANK'}}">
+      <view class="label">每个空的答案（多个正确答案用 | 隔开，如：北京|Beijing）</view>
+      <view wx:for="{{blanks}}" wx:key="index" class="blank-row">
+        <input class="input" value="{{item}}" placeholder="第 {{index + 1}} 空的答案" data-i="{{index}}" bindinput="onBlank" />
+        <text class="link link-red" wx:if="{{blanks.length > 1}}" data-i="{{index}}" bindtap="onRemoveBlank">删除</text>
+      </view>
+      <view class="link mt" style="margin-left: 0;" bindtap="onAddBlank">+ 增加一个空</view>
+    </block>
+
+    <block wx:if="{{type === 'ESSAY'}}">
+      <view class="label">参考答案（选填，只有老师能看到）</view>
+      <textarea class="textarea" value="{{answer}}" maxlength="10000" auto-height data-field="answer" bindinput="onField"></textarea>
+    </block>
+
+    <view class="label">分值</view>
+    <input class="input" type="digit" value="{{score}}" placeholder="例如 10" data-field="score" bindinput="onField" />
+  </view>
+
+  <view class="bottom-bar">
+    <block wx:if="{{isNew}}">
+      <button class="btn btn-plain" disabled="{{saving}}" data-continue="{{false}}" bindtap="onSave">保存并返回</button>
+      <button class="btn" disabled="{{saving}}" data-continue="{{true}}" bindtap="onSave">保存，继续加下一题</button>
+    </block>
+    <button wx:else class="btn" disabled="{{saving}}" data-continue="{{false}}" bindtap="onSave">保存</button>
+  </view>
+</view>

@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="title" style="margin-bottom: 20rpx;">{{name}}</view>
+  <view wx:for="{{rows}}" wx:key="paperId" class="card" data-id="{{item.submissionId}}" bindtap="onOpen">
+    <view class="row">
+      <view class="title grow">{{item.title}}</view>
+      <view class="tag {{item.statusCls}}">{{item.statusText}}</view>
+    </view>
+    <view class="muted mt" wx:if="{{item.scoreText}}">{{item.scoreText}}</view>
+  </view>
+  <view class="empty" wx:if="{{loaded && rows.length === 0}}">还没有试卷</view>
+</view>

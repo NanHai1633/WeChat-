@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/student/papers/papers",
+    "pages/student/exam/exam",
+    "pages/student/result/result",
+    "pages/admin/home/home",
+    "pages/admin/papers/papers",
+    "pages/admin/students/students",
+    "pages/admin/student-detail/student-detail",
+    "pages/admin/paper-edit/paper-edit",
+    "pages/admin/question-edit/question-edit",
+    "pages/admin/submissions/submissions",
+    "pages/admin/grade/grade",
+    "pages/admin/password/password"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#2563eb",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "做题系统",
+    "backgroundColor": "#f3f5f9",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

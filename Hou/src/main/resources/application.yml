@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          # 每次都向服务器确认，网页更新后浏览器不会继续用旧文件
+          no-cache: true
+  profiles:
+    # 默认用 H2 本地文件库，无需安装数据库；上线用 --spring.profiles.active=mysql
+    default: dev
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+mybatis-plus:
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+
+app:
+  upload-dir: ${UPLOAD_DIR:./data/uploads}
+  jwt:
+    expire-hours: 168

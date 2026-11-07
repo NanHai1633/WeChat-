@@ -1,0 +1,48 @@
+<view class="container" wx:if="{{paper}}">
+  <view class="card">
+    <view class="row">
+      <view class="title-large grow">{{paper.title}}</view>
+      <view class="tag {{published ? 'tag-green' : ''}}">{{published ? '已发布' : '未发布'}}</view>
+    </view>
+    <view class="muted mt">{{questionCount}} 题，满分 {{paper.maxScore}} 分</view>
+    <view class="notice mt" wx:if="{{!published}}">学生还看不到这篇，题目加好后点“发布”</view>
+    <view class="actions">
+      <button class="btn {{published ? 'btn-plain' : ''}}" bindtap="onToggle">{{published ? '下架' : '发布'}}</button>
+      <button class="btn btn-plain" bindtap="onSubmissions">学生做题情况</button>
+    </view>
+    <view class="card-tools">
+      <text class="link" bindtap="onRename">改名称</text>
+      <text class="link link-red" bindtap="onDelete">删除试卷</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{questionCount === 0}}">还没有题目，点下方按钮添加</view>
+
+  <view wx:for="{{groups}}" wx:for-item="group" wx:key="type">
+    <view class="section-title">{{group.label}}（{{group.questions.length}}）</view>
+    <view wx:for="{{group.questions}}" wx:key="id" class="card">
+      <view class="row">
+        <view style="font-weight: 700;">第 {{item.no}} 题</view>
+        <view class="muted">{{item.score}} 分</view>
+      </view>
+      <view class="question-text">{{item.content}}</view>
+      <view class="gallery" wx:if="{{item.imageUrls.length > 0}}">
+        <image wx:for="{{item.imageUrls}}" wx:for-item="url" wx:key="*this" class="thumb" src="{{url}}" mode="aspectFill"
+               data-urls="{{item.imageUrls}}" data-current="{{url}}" bindtap="onPreview"></image>
+      </view>
+      <view class="muted pre mt" wx:if="{{item.optionsText}}">{{item.optionsText}}</view>
+      <view class="answer-block">
+        <view class="muted">答案</view>
+        <view class="pre">{{item.answerText}}</view>
+      </view>
+      <view class="card-tools">
+        <text class="link" data-id="{{item.id}}" bindtap="onEditQuestion">修改</text>
+        <text class="link link-red" data-id="{{item.id}}" bindtap="onDeleteQuestion">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn" bindtap="onAddQuestion">+ 添加题目</button>
+  </view>
+</view>

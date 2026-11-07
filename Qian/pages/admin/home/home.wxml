@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="stats">
+    <view class="stat"><text class="stat-num {{pendingTotal > 0 ? 'text-orange' : ''}}">{{pendingTotal}}</text>待判卷</view>
+    <view class="stat" data-url="/pages/admin/papers/papers" bindtap="onTab"><text class="stat-num">{{paperTotal}}</text>试卷</view>
+    <view class="stat" data-url="/pages/admin/students/students" bindtap="onTab"><text class="stat-num">{{studentTotal}}</text>学生</view>
+  </view>
+
+  <view class="section-title">待判卷（{{pendingTotal}}）</view>
+  <view wx:for="{{pending}}" wx:key="submissionId" class="card" data-id="{{item.submissionId}}" bindtap="onGrade">
+    <view class="row">
+      <view class="title grow">{{item.username}}</view>
+      <view class="text-blue muted">去判卷 ›</view>
+    </view>
+    <view class="muted">{{item.title}}</view>
+    <view class="muted">交卷时间 {{item.submittedAt}}</view>
+  </view>
+  <view class="empty" wx:if="{{loaded && pending.length === 0}}">没有待判的答卷</view>
+
+  <view class="center mt">
+    <text class="link" style="margin-left: 0;" bindtap="onPassword">修改我的密码</text>
+    <text class="link link-red" bindtap="onLogout">退出登录（{{username}}）</text>
+  </view>
+
+  <view class="tabbar">
+    <view class="tabbar-item tabbar-active">工作台</view>
+    <view class="tabbar-item" data-url="/pages/admin/papers/papers" bindtap="onTab">试卷</view>
+    <view class="tabbar-item" data-url="/pages/admin/students/students" bindtap="onTab">学生</view>
+  </view>
+</view>

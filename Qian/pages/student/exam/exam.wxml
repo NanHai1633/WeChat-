@@ -1,0 +1,101 @@
+<view class="container" wx:if="{{current}}">
+  <view class="row">
+    <view class="title grow">{{title}}</view>
+    <view class="tag tag-orange" wx:if="{{locked}}">已交卷</view>
+    <view class="muted {{saveCls}}" wx:else>{{saveText}}</view>
+  </view>
+  <view class="exam-progress">
+    <view class="progress"><view class="progress-fill" style="width: {{percent}}%;"></view></view>
+    <view class="muted">已答 {{doneCount}} / {{total}}</view>
+  </view>
+
+  <view class="type-tabs" wx:if="{{tabs.length > 1}}">
+    <view wx:for="{{tabs}}" wx:key="type" class="type-tab {{item.active ? 'type-tab-active' : ''}}"
+          data-i="{{item.first}}" bindtap="onJump">
+      {{item.label}}
+      <text class="type-tab-count">{{item.done}}/{{item.count}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="row">
+      <view><text class="question-no">{{index + 1}}</text><text class="muted"> / {{total}}</text></view>
+      <view class="tag tag-blue">{{current.typeText}} · {{current.score}} 分</view>
+    </view>
+    <view class="question-text">{{current.content}}</view>
+    <view class="gallery" wx:if="{{current.imageUrls.length > 0}}">
+      <image wx:for="{{current.imageUrls}}" wx:key="*this" class="thumb" src="{{item}}" mode="aspectFill"
+             data-urls="{{current.imageUrls}}" data-current="{{item}}" bindtap="onPreview"></image>
+    </view>
+
+    <view wx:for="{{options}}" wx:key="key"
+          class="option {{item.selected ? 'option-selected' : ''}} {{locked ? 'option-locked' : ''}}"
+          data-key="{{item.key}}" bindtap="onChoose">
+      <view class="option-key">{{item.mark}}</view>
+      <view class="grow pre">{{item.text}}</view>
+    </view>
+
+    <view wx:for="{{blanks}}" wx:key="index">
+      <view class="label">第 {{index + 1}} 空</view>
+      <input class="input" value="{{item}}" disabled="{{locked}}" placeholder="请输入答案"
+             data-i="{{index}}" bindinput="onBlankInput" bindblur="onSaveText" />
+    </view>
+
+    <block wx:if="{{current.type === 'ESSAY'}}">
+      <view class="label">你的结果<text class="required" wx:if="{{!locked}}">必填</text></view>
+      <!-- 答题卡打开时不渲染，原生输入框会盖在弹层上面 -->
+      <textarea wx:if="{{!sheetOpen}}" class="textarea" value="{{essay}}" disabled="{{locked}}"
+                maxlength="10000" auto-height placeholder="请在这里写下结果"
+                bindinput="onEssayInput" bindblur="onSaveText"></textarea>
+      <view class="label" wx:if="{{!locked || photoUrls.length > 0}}">{{locked ? '我的照片' : '照片（选填）'}}</view>
+      <view class="gallery">
+        <view wx:for="{{photoUrls}}" wx:key="*this" class="thumb-wrap">
+          <image class="thumb" src="{{item}}" mode="aspectFill"
+                 data-urls="{{photoUrls}}" data-current="{{item}}" bindtap="onPreview"></image>
+          <view class="thumb-remove" wx:if="{{!locked}}" data-i="{{index}}" bindtap="onRemovePhoto">×</view>
+        </view>
+        <view class="upload-tile" wx:if="{{!locked && photoUrls.length < maxImages}}" bindtap="onAddPhoto">
+          <text class="upload-plus">+</text>添加照片
+        </view>
+      </view>
+    </block>
+    <view class="muted mt" wx:if="{{locked}}">已交卷，答案不能再修改</view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn btn-plain {{index === 0 ? 'btn-disabled' : ''}}" disabled="{{index === 0}}" bindtap="onPrev">上一题</button>
+    <button class="btn btn-soft" bindtap="onOpenSheet">答题卡</button>
+    <button wx:if="{{!isLast}}" class="btn" bindtap="onNext">下一题</button>
+    <button wx:elif="{{locked}}" class="btn" bindtap="onBack">返回</button>
+    <button wx:else class="btn" bindtap="onOpenSheet">去交卷</button>
+  </view>
+
+  <view class="sheet-mask" wx:if="{{sheetOpen}}" bindtap="onCloseSheet">
+    <view class="sheet" catchtap="onSheetTap">
+      <view class="row">
+        <view class="title">答题卡</view>
+        <view class="link" bindtap="onCloseSheet">关闭</view>
+      </view>
+      <view class="legend">
+        <view class="legend-item"><view class="dot dot-done"></view>已答</view>
+        <view class="legend-item"><view class="dot"></view>未答</view>
+        <view class="legend-item"><view class="dot dot-current"></view>当前</view>
+      </view>
+      <scroll-view scroll-y class="sheet-body">
+        <view wx:for="{{groups}}" wx:for-item="group" wx:key="type">
+          <view class="sheet-group">{{group.label}}</view>
+          <view class="cells">
+            <view wx:for="{{group.cells}}" wx:key="i"
+                  class="cell {{item.done ? 'cell-done' : ''}} {{item.i === index ? 'cell-current' : ''}}"
+                  data-i="{{item.i}}" bindtap="onSheetJump">{{item.i + 1}}</view>
+          </view>
+        </view>
+      </scroll-view>
+      <block wx:if="{{!locked}}">
+        <view class="notice mt {{sheetNoticeCls}}">{{sheetNotice}}</view>
+        <button class="btn {{canSubmit ? '' : 'btn-disabled'}}" disabled="{{!canSubmit}}" bindtap="onSubmit">交卷</button>
+      </block>
+    </view>
+  </view>
+</view>
+<view class="empty" wx:if="{{loaded && !current}}">这篇还没有题目</view>

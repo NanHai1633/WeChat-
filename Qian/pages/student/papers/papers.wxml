@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="hero">
+    <view class="row">
+      <view class="hero-title grow">你好，{{username}}</view>
+      <view class="hero-logout" bindtap="onLogout">退出</view>
+    </view>
+    <view class="hero-sub">{{summary}}</view>
+  </view>
+
+  <view wx:for="{{groups}}" wx:for-item="group" wx:key="title">
+    <view class="section-title">{{group.title}}（{{group.rows.length}}）</view>
+    <view wx:for="{{group.rows}}" wx:key="paperId" class="card" data-id="{{item.paperId}}" data-status="{{item.statusKey}}" bindtap="onOpen">
+      <view class="row">
+        <view class="title grow">{{item.title}}</view>
+        <view class="tag {{item.statusCls}}">{{item.statusText}}</view>
+      </view>
+      <view class="card-score" wx:if="{{item.graded}}">
+        <text class="card-score-num">{{item.totalScore}}</text> / {{item.maxScore}} 分
+      </view>
+      <block wx:if="{{item.showProgress}}">
+        <view class="muted mt">共 {{item.questionCount}} 题，满分 {{item.maxScore}} 分，已答 {{item.answeredCount}} 题</view>
+        <view class="progress"><view class="progress-fill" style="width: {{item.percent}}%;"></view></view>
+      </block>
+      <view class="card-action">{{item.action}} ›</view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{loaded && groups.length === 0}}">暂时没有题目</view>
+</view>

@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="tabs">
+    <view wx:for="{{filters}}" wx:key="value" class="tab {{filter === item.value ? 'tab-active' : ''}}"
+          data-value="{{item.value}}" bindtap="onFilter">{{item.label}}</view>
+  </view>
+  <view wx:for="{{rows}}" wx:key="studentId" class="card" data-id="{{item.submissionId}}" bindtap="onOpen">
+    <view class="row">
+      <view class="title grow">{{item.username}}</view>
+      <view class="tag {{item.statusCls}}">{{item.statusText}}</view>
+    </view>
+    <view class="muted mt" wx:if="{{item.scoreText}}">{{item.scoreText}}</view>
+  </view>
+  <view class="empty" wx:if="{{loaded && rows.length === 0}}">没有符合条件的学生</view>
+</view>
